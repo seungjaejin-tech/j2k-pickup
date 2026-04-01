@@ -1,4 +1,134 @@
-h<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#4a6cf7">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" href="./icon.svg">
+    <link rel="apple-touch-icon" href="./icon.svg">
+    <title>반품 수거 접수</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Malgun Gothic','Segoe UI',sans-serif;background:#f0f2f5;min-height:100vh;display:flex;align-items:center;justify-content:center}
+        .container{background:#fff;border-radius:16px;box-shadow:0 2px 16px rgba(0,0,0,.08);padding:32px;width:420px;max-width:95vw}
+        h1{font-size:20px;color:#1a1a2e;margin-bottom:4px}
+        .subtitle{font-size:13px;color:#888;margin-bottom:24px}
+        .field{margin-bottom:16px}
+        label{display:block;font-size:13px;font-weight:600;color:#333;margin-bottom:6px}
+        label .req{color:#e74c3c}
+        input,textarea,select{width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;transition:border-color .2s;font-family:inherit}
+        input:focus,textarea:focus,select:focus{outline:none;border-color:#4a6cf7}
+        textarea{resize:vertical;min-height:60px}
+        .btn{width:100%;padding:12px;background:#4a6cf7;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:background .2s}
+        .btn:hover{background:#3a5ce5}
+        .btn:disabled{background:#aab;cursor:not-allowed}
+        .success{text-align:center;padding:40px 20px}
+        .success .icon{font-size:48px;margin-bottom:12px}
+        .success h2{color:#27ae60;margin-bottom:8px}
+        .success p{color:#666;font-size:14px;margin-bottom:20px}
+        .btn-reset{background:#eee;color:#333}
+        .btn-reset:hover{background:#ddd}
+    </style>
+</head>
+<body>
+    <div class="container" id="formSection">
+        <h1>반품 수거 접수</h1>
+        <p class="subtitle">J2K CX | 입력 후 접수 버튼을 누르면 시트에 자동 기록됩니다</p>
+        <form id="pickupForm" onsubmit="submitForm(event)">
+            <div class="field">
+                <label>고객명 <span class="req">*</span></label>
+                <input type="text" id="customerName" required placeholder="홍길동">
+            </div>
+            <div class="field">
+                <label>전화번호 <span class="req">*</span></label>
+                <input type="tel" id="phone" required placeholder="01012345678">
+            </div>
+            <div class="field">
+                <label>주소 <span class="req">*</span></label>
+                <input type="text" id="address" required placeholder="서울시 강남구 테헤란로 123">
+            </div>
+            <div class="field">
+                <label>주문번호 <span class="req">*</span></label>
+                <input type="text" id="orderNumber" required placeholder="ORD-2026-0001">
+            </div>
+            <div class="field">
+                <label>전달사항 (요청사항)</label>
+                <textarea id="memo" placeholder="부재시 경비실에 맡겨주세요"></textarea>
+            </div>
+            <div class="field">
+                <label>반품사유 <span class="req">*</span></label>
+                <select id="returnReason" required>
+                    <option value="">선택해주세요</option>
+                    <option value="단순변심">단순변심</option>
+                    <option value="상품불량">상품불량</option>
+                    <option value="오배송">오배송</option>
+                    <option value="사이즈불일치">사이즈 불일치</option>
+                    <option value="색상불일치">색상 불일치</option>
+                    <option value="기타">기타</option>
+                </select>
+            </div>
+            <button type="submit" class="btn" id="submitBtn">수거 접수하기</button>
+        </form>
+    </div>
+
+    <div class="container success" id="successSection" style="display:none">
+        <div class="icon">&#10004;</div>
+        <h2>접수 완료!</h2>
+        <p id="successMsg">반품 수거 접수가 정상적으로 완료되었습니다.</p>
+        <button class="btn btn-reset" onclick="resetForm()">새 접수하기</button>
+    </div>
+
+    <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBG_uD7D_I6d5QUuhnGPnSlFk-Bv_M_tsLFWctffbEYDb7g_gP9rtdSbS21B5ksFoL/exec';
+
+    async function submitForm(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.textContent = '접수 중...';
+
+        const data = {
+            customerName: document.getElementById('customerName').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            address: document.getElementById('address').value.trim(),
+            orderNumber: document.getElementById('orderNumber').value.trim(),
+            memo: document.getElementById('memo').value.trim(),
+            returnReason: document.getElementById('returnReason').value
+        };
+
+        try {
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+            document.getElementById('successMsg').textContent =
+                data.customerName + '님의 반품 수거가 접수되었습니다.';
+        } catch (err) {
+            alert('접수 중 오류가 발생했습니다. 다시 시도해주세요.');
+            btn.disabled = false;
+            btn.textContent = '수거 접수하기';
+        }
+    }
+
+    function resetForm() {
+        document.getElementById('pickupForm').reset();
+        document.getElementById('formSection').style.display = 'block';
+        document.getElementById('successSection').style.display = 'none';
+        document.getElementById('submitBtn').disabled = false;
+        document.getElementById('submitBtn').textContent = '수거 접수하기';
+    }
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js');
+    }
+    </script>
+</body>
+</html>h<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="utf-8">
