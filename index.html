@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4a6cf7">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon-192.png">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <title>ë°í ìê±° ì ì</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Malgun Gothic','Segoe UI',sans-serif;background:#f0f2f5;min-height:100vh;display:flex;align-items:center;justify-content:center}
+    .container{background:#fff;border-radius:16px;box-shadow:0 2px 16px rgba(0,0,0,.08);padding:32px;width:420px;max-width:95vw}
+    h1{font-size:20px;color:#1a1a2e;margin-bottom:4px}
+    .subtitle{font-size:13px;color:#888;margin-bottom:24px}
+    .field{margin-bottom:16px}
+    label{display:block;font-size:13px;font-weight:600;color:#333;margin-bottom:6px}
+    label .req{color:#e74c3c}
+    input,textarea,select{width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;transition:border-color .2s;font-family:inherit}
+    input:focus,textarea:focus,select:focus{outline:none;border-color:#4a6cf7}
+    textarea{resize:vertical;min-height:60px}
+    .btn{width:100%;padding:12px;background:#4a6cf7;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:background .2s}
+    .btn:hover{background:#3a5ce5}
+    .btn:disabled{background:#aab;cursor:not-allowed}
+    .success{text-align:center;padding:40px 20px}
+    .success .icon{font-size:48px;margin-bottom:12px}
+    .success h2{color:#27ae60;margin-bottom:8px}
+    .success p{color:#666;font-size:14px;margin-bottom:20px}
+    .btn-reset{background:#eee;color:#333}
+    .btn-reset:hover{background:#ddd}
+  </style>
+</head>
+<body>
+  <div class="container" id="formSection">
+    <h1>ë°í ìê±° ì ì</h1>
+    <p class="subtitle">J2K CX | ìë ¥ í ì ì ë²í¼ì ëë¥´ë©´ ìí¸ì ìë ê¸°ë¡ë©ëë¤</p>
+    <form id="pickupForm" onsubmit="submitForm(event)">
+      <div class="field">
+        <label>ê³ ê°ëª <span class="req">*</span></label>
+        <input type="text" id="customerName" required placeholder="íê¸¸ë">
+      </div>
+      <div class="field">
+        <label>ì íë²í¸ <span class="req">*</span></label>
+        <input type="tel" id="phone" required placeholder="01012345678">
+      </div>
+      <div class="field">
+        <label>ì£¼ì <span class="req">*</span></label>
+        <input type="text" id="address" required placeholder="ìì¸ì ê°ë¨êµ¬ íí¤ëë¡ 123">
+      </div>
+      <div class="field">
+        <label>ì£¼ë¬¸ë²í¸ <span class="req">*</span></label>
+        <input type="text" id="orderNumber" required placeholder="ORD-2026-0001">
+      </div>
+      <div class="field">
+        <label>ì ë¬ì¬í­ (ìì²­ì¬í­)</label>
+        <textarea id="memo" placeholder="ë¶ì¬ì ê²½ë¹ì¤ì ë§¡ê²¨ì£¼ì¸ì"></textarea>
+      </div>
+      <div class="field">
+        <label>ë°íì¬ì  <span class="req">*</span></label>
+        <select id="returnReason" required>
+          <option value="">ì íí´ì£¼ì¸ì</option>
+          <option value="ë¨ìë³ì¬">ë¨ìë³ì¬</option>
+          <option value="ìíë¶ë">ìíë¶ë</option>
+          <option value="ì¤ë°°ì¡">ì¤ë°°ì¡</option>
+          <option value="ì¬ì´ì¦ë¶ì¼ì¹">ì¬ì´ì¦ ë¶ì¼ì¹</option>
+          <option value="ììë¶ì¼ì¹">ìì ë¶ì¼ì¹</option>
+          <option value="ê¸°í">ê¸°í</option>
+        </select>
+      </div>
+      <button type="submit" class="btn" id="submitBtn">ìê±° ì ìíê¸°</button>
+    </form>
+  </div>
+  <div class="container success" id="successSection" style="display:none">
+    <div class="icon">â</div>
+    <h2>ì ì ìë£!</h2>
+    <p>ë°í ìê±° ì ë³´ê° ìí¸ì ê¸°ë¡ëììµëë¤.</p>
+    <button class="btn btn-reset" onclick="resetForm()">ìë¡ì´ ì ìíê¸°</button>
+  </div>
+  <script>
+    const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwBG_uD7D_I6d5QUuhnGPnSlFk-Bv_M_tsLFWctffbEYDb7g_gP9rtdSbS21B5ksFoL/exec";
+
+    if("serviceWorker"in navigator){navigator.serviceWorker.register("./sw.js")}
+
+    function submitForm(e){
+      e.preventDefault();
+      var btn=document.getElementById("submitBtn");
+      btn.disabled=true;btn.textContent="ì ì ì¤...";
+      var data={
+        customerName:document.getElementById("customerName").value,
+        phone:document.getElementById("phone").value,
+        address:document.getElementById("address").value,
+        orderNumber:document.getElementById("orderNumber").value,
+        memo:document.getElementById("memo").value,
+        returnReason:document.getElementById("returnReason").value
+      };
+      fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data),mode:"no-cors"})
+      .then(function(){
+        document.getElementById("formSection").style.display="none";
+        document.getElementById("successSection").style.display="block";
+      }).catch(function(err){
+        alert("ì¤ë¥ê° ë°ìíìµëë¤: "+err.message);
+        btn.disabled=false;btn.textContent="ìê±° ì ìíê¸°";
+      });
+    }
+    function resetForm(){
+      document.getElementById("pickupForm").reset();
+      document.getElementById("formSection").style.display="block";
+      document.getElementById("successSection").style.display="none";
+      document.getElementById("submitBtn").disabled=false;
+      document.getElementById("submitBtn").textContent="ìê±° ì ìíê¸°";
+    }
+  </script>
+</body>
+</html>
