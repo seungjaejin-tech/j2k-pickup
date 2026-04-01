@@ -37,6 +37,10 @@
         <p class="subtitle">J2K CX | 입력 후 접수 버튼을 누르면 시트에 자동 기록됩니다</p>
         <form id="pickupForm" onsubmit="submitForm(event)">
             <div class="field">
+                <label>Chat URL <span class="req">*</span></label>
+                <input type="url" id="chatUrl" required placeholder="https://chat.example.com/...">
+            </div>
+            <div class="field">
                 <label>고객명 <span class="req">*</span></label>
                 <input type="text" id="customerName" required placeholder="홍길동">
             </div>
@@ -68,6 +72,10 @@
                     <option value="기타">기타</option>
                 </select>
             </div>
+            <div class="field">
+                <label>리니어 URL</label>
+                <input type="url" id="linearUrl" placeholder="https://linear.app/...">
+            </div>
             <button type="submit" class="btn" id="submitBtn">수거 접수하기</button>
         </form>
     </div>
@@ -89,12 +97,14 @@
         btn.textContent = '접수 중...';
 
         const data = {
+            chatUrl: document.getElementById('chatUrl').value.trim(),
             customerName: document.getElementById('customerName').value.trim(),
             phone: document.getElementById('phone').value.trim(),
             address: document.getElementById('address').value.trim(),
             orderNumber: document.getElementById('orderNumber').value.trim(),
             memo: document.getElementById('memo').value.trim(),
-            returnReason: document.getElementById('returnReason').value
+            returnReason: document.getElementById('returnReason').value,
+            linearUrl: document.getElementById('linearUrl').value.trim()
         };
 
         try {
