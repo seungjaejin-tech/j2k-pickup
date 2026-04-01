@@ -1,0 +1,17 @@
+{
+  "name": "반품 수거 접수",
+  "short_name": "반품접수",
+  "description": "J2K CX 반품 수거 접수 시스템",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f0f2f5",
+  "theme_color": "#4a6cf7",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
