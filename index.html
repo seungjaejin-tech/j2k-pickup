@@ -1,12 +1,12 @@
-<!DOCTYPE html>
+h<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#4a6cf7">
   <link rel="manifest" href="./manifest.json">
-  <link rel="icon" href="./icon-192.png">
-  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="icon" href="./icon.svg">
+  <link rel="apple-touch-icon" href="./icon.svg">
   <title>ë°í ìê±° ì ì</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
@@ -18,7 +18,7 @@
     label{display:block;font-size:13px;font-weight:600;color:#333;margin-bottom:6px}
     label .req{color:#e74c3c}
     input,textarea,select{width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;transition:border-color .2s;font-family:inherit}
-    input:focus,textarea:focus,select:focus{outline:none;border-color:#4a6cf7}
+    input:focus,textarea:focus,selehct:focus{outline:none;border-color:#4a6cf7}
     textarea{resize:vertical;min-height:60px}
     .btn{width:100%;padding:12px;background:#4a6cf7;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:background .2s}
     .btn:hover{background:#3a5ce5}
@@ -73,43 +73,3 @@
   </div>
   <div class="container success" id="successSection" style="display:none">
     <div class="icon">â</div>
-    <h2>ì ì ìë£!</h2>
-    <p>ë°í ìê±° ì ë³´ê° ìí¸ì ê¸°ë¡ëììµëë¤.</p>
-    <button class="btn btn-reset" onclick="resetForm()">ìë¡ì´ ì ìíê¸°</button>
-  </div>
-  <script>
-    const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwBG_uD7D_I6d5QUuhnGPnSlFk-Bv_M_tsLFWctffbEYDb7g_gP9rtdSbS21B5ksFoL/exec";
-
-    if("serviceWorker"in navigator){navigator.serviceWorker.register("./sw.js")}
-
-    function submitForm(e){
-      e.preventDefault();
-      var btn=document.getElementById("submitBtn");
-      btn.disabled=true;btn.textContent="ì ì ì¤...";
-      var data={
-        customerName:document.getElementById("customerName").value,
-        phone:document.getElementById("phone").value,
-        address:document.getElementById("address").value,
-        orderNumber:document.getElementById("orderNumber").value,
-        memo:document.getElementById("memo").value,
-        returnReason:document.getElementById("returnReason").value
-      };
-      fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data),mode:"no-cors"})
-      .then(function(){
-        document.getElementById("formSection").style.display="none";
-        document.getElementById("successSection").style.display="block";
-      }).catch(function(err){
-        alert("ì¤ë¥ê° ë°ìíìµëë¤: "+err.message);
-        btn.disabled=false;btn.textContent="ìê±° ì ìíê¸°";
-      });
-    }
-    function resetForm(){
-      document.getElementById("pickupForm").reset();
-      document.getElementById("formSection").style.display="block";
-      document.getElementById("successSection").style.display="none";
-      document.getElementById("submitBtn").disabled=false;
-      document.getElementById("submitBtn").textContent="ìê±° ì ìíê¸°";
-    }
-  </script>
-</body>
-</html>
